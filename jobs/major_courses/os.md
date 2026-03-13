@@ -250,6 +250,75 @@ CPU 切换内核态 → 查 syscall 表 → 执行内核函数 →
 答：容器共享内核，轻量但隔离性弱；VM 有完整 Guest OS，隔离强但开销大
 ```
 
+#### 一、 核心概念（必考基础）
+容器 vs 虚拟机 (VM)：
+
+VM：包含完整的操作系统，有独立的 Hypervisor 层，资源占用大，启动慢。
+
+Docker：共享宿主机内核，利用 Namespace 和 Cgroups 实现隔离，轻量级，秒级启动。
+
+三个基本组件：
+
+Image (镜像)：只读的模板，包含运行环境。
+
+Container (容器)：镜像的运行实例（可读写层）。
+
+Repository (仓库)：集中存放镜像的地方（如 Docker Hub）。
+
+#### 二、 底层原理（区分大厂面试的关键）
+这是面试中最能体现深度的地方，务必背熟这三个词：
+
+Namespace (命名空间)：实现资源隔离（如 PID、Net、IPC、Mount 等），让容器觉得自己在独立的操作系统里。
+
+Cgroups (控制组)：实现资源限制（如限制容器最多使用 2GB 内存、50% CPU），防止某个容器榨干宿主机。
+
+UnionFS (联合文件系统)：实现分层存储。镜像是由一层层只读层组成的，通过“写时复制”（Copy-on-Write）技术，多个容器可以共享镜像层，节省空间。
+
+#### 三、 网络与存储
+网络模式 (Network)：
+
+Bridge (默认)：通过虚拟网桥 docker0 互联。
+
+Host：容器直接使用宿主机 IP 和端口（无隔离，性能最高）。
+
+None：不配置网络，安全性最高。
+
+Overlay：用于跨主机的容器通信（Swarm/K8s 常用）。
+
+持久化 (Storage)：
+
+Volume (卷)：Docker 管理，存储在宿主机特定位置，最推荐。
+
+Bind Mount (绑定挂载)：挂载宿主机任意路径，适合开发调试。
+
+#### 四、 Dockerfile 优化（实战经验）
+面试官常问：“如何减小 Docker 镜像体积？”
+
+使用精简基础镜像（如 alpine 或 distroless）。
+
+合并 RUN 指令（减少镜像层数）。
+
+使用多阶段构建 (Multi-stage builds)（只把编译后的产物带入最终镜像）。
+
+利用 .dockerignore 排除不必要的文件。
+
+#### 五、 常见高频面试题
+CMD 和 ENTRYPOINT 的区别？
+
+CMD 指定默认运行命令，会被 docker run 后面的参数覆盖。
+
+ENTRYPOINT 不会被覆盖，适合把容器当作可执行程序使用。
+
+如何进入一个正在运行的容器？
+
+docker exec -it <container_id> /bin/bash（最常用，开启新进程）。
+
+docker attach（接入原进程，退出会导致容器停止）。
+
+容器退出后，数据会丢失吗？
+
+不会。除非 docker rm 删除了容器。但建议重要数据一定要挂载 Volume。
+
 ### 6.4 性能调优常用命令
 ```bash
 # CPU

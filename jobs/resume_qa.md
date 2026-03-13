@@ -30,12 +30,14 @@ dot1xsyncd 则负责订阅状态变化，将认证通过后的授权信息（如
 
 ### 1. PR 链接汇总
 
+- 简历上的
+- [PR #16593](https://github.com/FRRouting/frr/pull/16593)
 - [PR #15716](https://github.com/FRRouting/frr/pull/15716)
+- [PR #16056](https://github.com/FRRouting/frr/pull/16056)
+
 - [PR #16232](https://github.com/FRRouting/frr/pull/16232)
 - [PR #16090](https://github.com/FRRouting/frr/pull/16090)
-- [PR #16056](https://github.com/FRRouting/frr/pull/16056)
 - [PR #15993](https://github.com/FRRouting/frr/pull/15993)
-- [PR #16593](https://github.com/FRRouting/frr/pull/16593)
 
 ### 2. 技术细节准备
 
